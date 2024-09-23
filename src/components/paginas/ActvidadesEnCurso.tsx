@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
 import Pagination from "../Pagination";
 import Filtro from "../filtros/Filtros";
-import { EtiquetasÁmbitosActividad, formatDate } from "@/api/servicios/enums";
+import { EtiquetasAmbitosActividad, formatDate } from "@/api/servicios/enums";
 import { ActividadEstado, ObtenerActividadesPorEstado } from "@/api/servicios/actividades";
 
 const ActvidadesEnCurso: React.FC = () => {
@@ -36,7 +36,7 @@ const ActvidadesEnCurso: React.FC = () => {
 
             return (
                 (carrera === "" || item.foreingCareers.some(fc => fc.name === carrera)) &&
-                (ambito === "" || item.scopes.some(s => EtiquetasÁmbitosActividad[s.scope] === ambito)) &&
+                (ambito === "" || item.scopes.some(s => EtiquetasAmbitosActividad[s.scope] === ambito)) &&
                 (!fechaInicioDate || inicioDate >= fechaInicioDate) &&
                 (!fechaFinDate || inicioDate <= fechaFinDate) &&
                 (busqueda === "" || item.name.toLowerCase().includes(busqueda.toLowerCase()))
@@ -50,9 +50,8 @@ const ActvidadesEnCurso: React.FC = () => {
     useEffect(() => {
         const obtenerDatos = async () => {
             try {
-                const data = await ObtenerActividadesPorEstado(2); // Obtén datos para el estado deseado
-                console.log(data)
-                setInitialData(data);
+                const data = await ObtenerActividadesPorEstado(3); // Obtén datos para el estado deseado
+                 setInitialData(data);
                 setFiltrarData(data);
                 setLoading(false);
             } catch (error) {
@@ -79,14 +78,14 @@ const ActvidadesEnCurso: React.FC = () => {
                         {paginatedData.map((item, index) => (
                             <div key={index} className="flex flex-col rounded-lg shadow-md overflow-hidden bg-white border border-gray-200">
                                 <img
-                                    src={'h' + item.bannerLink}
+                                    src={item.bannerLink}
                                     alt={item.name}
                                     className="w-full h-60 object-cover"
                                 />
                                 <div className="p-4 flex flex-col flex-grow text-gray-700">
                                     <h2 className="text-lg font-bold mb-2">{item.name}</h2>
                                     <p className=" mb-1"><span className="font-bold">Ubicación:</span> {item.location}</p>
-                                    <p className=" mb-1"><span className="font-bold">Ámbito:</span> {item.scopes.map(s => EtiquetasÁmbitosActividad[s.scope] || s.scope).join(", ")}</p>
+                                    <p className=" mb-1"><span className="font-bold">Ámbito:</span> {item.scopes.map(s => EtiquetasAmbitosActividad[s.scope] || s.scope).join(", ")}</p>
                                     <p className=" mb-1"><span className="font-bold">Cupos disponibles:</span> {item.totalSpots}</p>
                                     <p className=" mb-1"><span className="font-bold">Inicio:</span> {formatDate(item.startDate)}</p>
                                     <p className=" mb-1"><span className="font-bold">Final:</span> {formatDate(item.endDate)}</p>

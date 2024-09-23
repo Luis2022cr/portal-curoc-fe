@@ -1,7 +1,7 @@
-import axios from 'axios';
+import axios from "axios";
+import { makeUseAxios } from "axios-hooks";
 
 const axiosInstance = axios.create({
-  
   baseURL: import.meta.env.VITE_URL_BACK,
   // headers: {
   //   'Content-Type': 'application/json',
@@ -10,9 +10,9 @@ const axiosInstance = axios.create({
 
 axiosInstance.interceptors.request.use(
   (config) => {
-    const token = sessionStorage.getItem('accessToken');
+    const token = localStorage.getItem("accessToken");
     if (token) {
-      config.headers['Authorization'] = `Bearer ${token}`;
+      config.headers["Authorization"] = `Bearer ${token}`;
     }
     return config;
   },
@@ -21,5 +21,8 @@ axiosInstance.interceptors.request.use(
   }
 );
 
+export const useAxios = makeUseAxios({
+  axios: axiosInstance,
+});
 
 export default axiosInstance;

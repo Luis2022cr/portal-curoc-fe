@@ -1,4 +1,4 @@
-import { EtiquetasÁmbitosActividad, EtiquetasEstadoActividad, formatDate } from "../../api/servicios/enums";
+import { EtiquetasAmbitosActividad, estadoActividadMap, formatDate } from "../../api/servicios/enums";
 import { ActividadEstado, ObtenerActividadesSolicitadas } from "../../api/servicios/actividades";
 import FiltroGS from "../filtros/FiltroGestionSolicitudes";
 import { NavLink, useLocation } from "react-router-dom";
@@ -28,8 +28,7 @@ const ActividadesSolicitadas: React.FC = () => {
             setLoading(true); // Inicia la carga
             try {
                 const data = await ObtenerActividadesSolicitadas(); // el numero es el estado que queres filtrar en el pagina de enums.ts estan los numeros de los estados
-                console.log('data:', data)
-
+ 
                 setFiltrarData(data);
             } catch (error) {
                 setError('Failed to fetch activities');
@@ -50,10 +49,10 @@ const ActividadesSolicitadas: React.FC = () => {
 
             return (
                 (carrera === "" || item.foreingCareers.some(fc => fc.name === carrera)) &&
-                (ambito === "" || item.scopes.some(s => EtiquetasÁmbitosActividad[s.scope] === ambito)) &&
+                (ambito === "" || item.scopes.some(s => EtiquetasAmbitosActividad[s.scope] === ambito)) &&
                 (!fechaInicioDate || inicioDate >= fechaInicioDate) &&
                 (!fechaFinDate || inicioDate <= fechaFinDate) &&
-                (estado === "" || EtiquetasEstadoActividad[item.activityStatus] === estado)
+                (estado === "" || estadoActividadMap[item.activityStatus] === estado)
             );
         });
 
@@ -116,7 +115,7 @@ const ActividadesSolicitadas: React.FC = () => {
                                         <span className="inline-block w-1/3 md:hidden font-bold mr-4">Entidad organizadora:</span>{item.organizers.map(fc => fc.career?.name || fc.organization?.name).join(", ")}
                                     </td>
                                     <td className="p-1 md:border md:border-gray-500 block md:table-cell">
-                                        <span className="inline-block w-1/3 md:hidden font-bold mr-4">Ámbitos:</span>{item.scopes.map(s => EtiquetasÁmbitosActividad[s.scope] || s.scope).join(", ")}
+                                        <span className="inline-block w-1/3 md:hidden font-bold mr-4">Ámbitos:</span>{item.scopes.map(s => EtiquetasAmbitosActividad[s.scope] || s.scope).join(", ")}
                                     </td>
                                     <td className="p-1 md:border md:border-gray-500 block md:table-cell">
                                         <span className="inline-block w-1/3 md:hidden font-bold mr-4">Fecha Inicio:</span>{formatDate(item.startDate)}
@@ -125,7 +124,7 @@ const ActividadesSolicitadas: React.FC = () => {
                                         <span className="inline-block w-1/3 md:hidden font-bold mr-4">Fecha Final:</span>{formatDate(item.endDate)}
                                     </td>
                                     <td className="p-1 md:border md:border-gray-500 block md:table-cell">
-                                        <span className="inline-block w-1/3 md:hidden font-bold mr-4">Estado:</span>{EtiquetasEstadoActividad[item.activityStatus] || item.activityStatus}
+                                        <span className="inline-block w-1/3 md:hidden font-bold mr-4">Estado:</span>{estadoActividadMap[item.activityStatus] || item.activityStatus}
                                     </td>
                                     <td className="p-1 md:border md:border-gray-500 block md:table-cell">
                                         <span className="inline-block w-1/3 md:hidden font-bold mr-4">Observaciones:</span>{item.reviewObservations}

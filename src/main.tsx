@@ -1,3 +1,4 @@
+import { ToastContainer} from 'react-toastify';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import App from './App';
@@ -33,7 +34,7 @@ import SubirImagen from './components/otraPaginas/SubirImagen';
 import CoordinadoresAuth from './api/seguridad/CoordinadoresAuth';
 import EstudianteRoute from './api/seguridad/EstudiantesAuth';
 import VoaeAuth from './api/seguridad/VoaeAuth';
-
+import 'react-toastify/dist/ReactToastify.css';
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 
 root.render(
@@ -114,5 +115,6 @@ root.render(
         </Routes>
       </BrowserRouter>
     </AuthProvider>
+    <ToastContainer />
   </>
 );

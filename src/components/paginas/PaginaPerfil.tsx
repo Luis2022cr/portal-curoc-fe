@@ -44,8 +44,8 @@ const Perfil = () => {
         });
     };
 
-    const ultimaSesion = sessionStorage.getItem('ultimaSesion') || obtenerFechaHoraActual();
-    sessionStorage.setItem('ultimaSesion', obtenerFechaHoraActual());
+    const ultimaSesion = localStorage.getItem('ultimaSesion') || obtenerFechaHoraActual();
+    localStorage.setItem('ultimaSesion', obtenerFechaHoraActual());
 
     if (loading) {
         return <Loading />;

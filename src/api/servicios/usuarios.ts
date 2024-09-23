@@ -10,12 +10,19 @@ export interface Organization {
     name: string;
 }
 
+export enum Role {
+    STUDENT = 0,
+    TEACHER = 1,
+    VOAE = 2,
+}
+
 export interface User {
     id: number;
     names: string;
     lastnames: string;
     accountNumber: number;
     role: number;
+    email: string;
     career: Career;
     organizations: Organization[];
 }

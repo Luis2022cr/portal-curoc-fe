@@ -32,15 +32,10 @@ const SubirImagen: React.FC = () => {
             const formData = new FormData();
             formData.append('Banner', selectedFile);
     
-            // Muestra el contenido de FormData
-            for (const [key, value] of formData.entries()) {
-                console.log(`${key}:`, value);
-            }
-    
+           
             try {
-                const response = await axiosInstance.put(`/activities/${numericId}/banner`, formData);
-                console.log(response);
-                Alert({
+                await axiosInstance.put(`/activities/${numericId}/banner`, formData);
+                 Alert({
                     title: 'Éxito',
                     text: 'Imagen subida con éxito',
                     icon: 'success',

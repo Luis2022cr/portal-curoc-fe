@@ -4,7 +4,7 @@ import Pagination from "../Pagination";
 import Skeleton from "../Skeleton";
 import FiltroGS from "../filtros/FiltroGestionSolicitudes";
 import { ActividadEstado, ObtenerTodasLasActividades } from "../../api/servicios/actividades";
-import { EtiquetasEstadoActividad, EtiquetasÁmbitosActividad, formatDate } from "../../api/servicios/enums";
+import { estadoActividadMap, EtiquetasAmbitosActividad, formatDate } from "../../api/servicios/enums";
 import { MdOutlineRemoveRedEye } from "react-icons/md";
 
 const PaginaGestionActividad: React.FC = () => {
@@ -20,8 +20,7 @@ const PaginaGestionActividad: React.FC = () => {
             setLoading(true); // Inicia la carga
             try {
                 const data = await ObtenerTodasLasActividades(); // El número es el estado que quieres filtrar
-                console.log("Datos obtenidos de la API:", data); // Verifica todos los datos obtenidos
-                setFiltrarData(data);
+                 setFiltrarData(data);
             } catch (error) {
                 setError('Hay problemas de conexion con el Servidor');
             } finally {
@@ -41,7 +40,7 @@ const PaginaGestionActividad: React.FC = () => {
             const inicioDate = new Date(item.startDate.split('T')[0]);
             return (
                 (carrera === "" || item.foreingCareers.some(fc => fc.name === carrera)) &&
-                (ambito === "" || item.scopes.some(s => EtiquetasÁmbitosActividad[s.scope] === ambito)) &&
+                (ambito === "" || item.scopes.some(s => EtiquetasAmbitosActividad[s.scope] === ambito)) &&
                 (!fechaInicioDate || inicioDate >= fechaInicioDate) &&
                 (!fechaFinDate || inicioDate <= fechaFinDate) &&
                 (busqueda === "" || item.name.toLowerCase().includes(busqueda.toLowerCase()))
@@ -111,7 +110,7 @@ const PaginaGestionActividad: React.FC = () => {
                                         <span className="inline-block w-1/3 md:hidden font-bold mr-4">Solicitante:</span>{item.requestedBy.names} {item.requestedBy.lastNames}
                                     </td>
                                     <td className="p-1 md:border md:border-gray-500 block md:table-cell">
-                                        <span className="inline-block w-1/3 md:hidden font-bold mr-4">Ámbito:</span>{item.scopes.map(s => EtiquetasÁmbitosActividad[s.scope] || s.scope).join(", ")}
+                                        <span className="inline-block w-1/3 md:hidden font-bold mr-4">Ámbito:</span>{item.scopes.map(s => EtiquetasAmbitosActividad[s.scope] || s.scope).join(", ")}
                                     </td>
                                     <td className="p-1 md:border md:border-gray-500 block md:table-cell">
                                         <span className="inline-block w-1/3 md:hidden font-bold mr-4">Cupos:</span>{item.totalSpots}
@@ -124,7 +123,7 @@ const PaginaGestionActividad: React.FC = () => {
                                         <span className="inline-block w-1/3 md:hidden font-bold mr-4">Fecha Final:</span>{formatDate(item.endDate)}
                                     </td>
                                     <td className="p-1 md:border md:border-gray-500 block md:table-cell">
-                                        <span className="inline-block w-1/3 md:hidden font-bold mr-4">Estado:</span>{EtiquetasEstadoActividad[item.activityStatus] || item.activityStatus}
+                                        <span className="inline-block w-1/3 md:hidden font-bold mr-4">Estado:</span>{estadoActividadMap[item.activityStatus] || item.activityStatus}
                                     </td>
                                     <td className="p-1 md:border text-center md:border-gray-500 block md:table-cell relative">
                                         <NavLink

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import {   ActividadNombre, AprobarActividad, ObtenerActividadesPorNombre, RechazarActividad } from '../../api/servicios/actividades';
-import {  EtiquetasÁmbitosActividad, formatDate } from '../../api/servicios/enums';
+import { AprobarActividad, useObtenerActividadesPorNombre, RechazarActividad } from '../../api/servicios/actividades';
+import {  EtiquetasAmbitosActividad, formatDate } from '../../api/servicios/enums';
 import Alert from '@/components/Alert';
 import Loading from '@/components/Loading';
 
@@ -10,39 +10,18 @@ const PaginaGestionSolicitudesVOAE: React.FC = () => {
         document.title = "Coordinadores - UNAH CUROC"
     }, []);
 
-    const [activity, setActivity] = useState<ActividadNombre | null>(null);
-    const [loading, setLoading] = useState<boolean>(true);
-    const [isLoadingAprobar, setIsLoadingAprobar] = useState(false);
+      const [isLoadingAprobar, setIsLoadingAprobar] = useState(false);
     const [isLoadingRechazar, setIsLoadingRechazar] = useState(false);
     const [error, setError] = useState<string | null>(null);
-    const [observation, setObservation] = useState<string>('');  
+    const [observation, setObservation] = useState<string>('');
     const { slug } = useParams<{ slug?: string }>();
+
+    if (!slug) {
+      setError("No name parameter provided");
+    }
+
     const navigate = useNavigate();
-    
-    useEffect(() => {
-        const obtenerDatos = async () => {
-            setLoading(true);
-            try {
-                if (slug) {
-                    const data = await ObtenerActividadesPorNombre(slug);
-                    
-                    if (data && typeof data === 'object' && !Array.isArray(data)) {
-                        setActivity(data); // Set single activity object
-                    } else {
-                        setError('Data is not an object');
-                    }
-                } else {
-                    setError('No name parameter provided');
-                }
-            } catch (error) {
-                console.error('Error fetching activities:', error);
-                setError('Failed to fetch activities');
-            } finally {
-                setLoading(false);
-            }
-        };
-        obtenerDatos();
-    }, [slug]);
+    const [{ data: activity, loading }] = useObtenerActividadesPorNombre(slug!);
 
     const botonAprobar = async () => {
         if (activity) {
@@ -161,7 +140,7 @@ const PaginaGestionSolicitudesVOAE: React.FC = () => {
                                         <ul className="list-disc pl-5">
                                             {activity.scopes.map((scope, index) => (
                                                 <li key={index}>
-                                                    {EtiquetasÁmbitosActividad[scope.scope] || scope.scope} | {scope.hours} horas
+                                                    {EtiquetasAmbitosActividad[scope.scope] || scope.scope} | {scope.hours} horas
                                                 </li>
                                             ))}
                                         </ul>

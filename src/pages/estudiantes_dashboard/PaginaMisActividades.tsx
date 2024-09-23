@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import Pagination from "../../components/Pagination";
 import FiltroMA from "../../components/filtros/filtroMisActividades";
-import { EtiquetasEstadoActividad, EtiquetasÁmbitosActividad, formatDate } from "@/api/servicios/enums";
+import { estadoActividadMap, EtiquetasAmbitosActividad, formatDate } from "@/api/servicios/enums";
 import Skeleton from "@/components/Skeleton";
 import { MisActividades } from "@/api/servicios/actividades";
 import axiosInstance from "@/api/axiosInstance";
@@ -21,8 +21,7 @@ export default function PaginaMisActividades() {
             setLoading(true);
             try {
                 const response = await axiosInstance.get('/users/my-activities', {});
-                console.log(response.data)
-                setFiltrarData(response.data);
+                 setFiltrarData(response.data);
             } catch (error) {
                 setError('Hay problemas de conexion con el Servidor');
             } finally {
@@ -49,7 +48,7 @@ export default function PaginaMisActividades() {
             const inicioDate = new Date(item.startDate.split(' ')[0]);
 
             return (
-                (ambito === "" || item.activityScopes.some(s => EtiquetasÁmbitosActividad[s.scope] === ambito)) &&
+                (ambito === "" || item.activityScopes.some(s => EtiquetasAmbitosActividad[s.scope] === ambito)) &&
                 (!fechaInicioDate || inicioDate >= fechaInicioDate) &&
                 (!fechaFinDate || inicioDate <= fechaFinDate) &&
                 (busqueda === "" || item.name.toLowerCase().includes(busqueda.toLowerCase()))
@@ -73,7 +72,7 @@ export default function PaginaMisActividades() {
 
     filtrarData.forEach(actividad => {
         actividad.memberScopes.forEach(memberScopes => {
-            const ambitoNombre = EtiquetasÁmbitosActividad[memberScopes.scope] || `Ámbito ${memberScopes.scope}`;
+            const ambitoNombre = EtiquetasAmbitosActividad[memberScopes.scope] || `Ámbito ${memberScopes.scope}`;
             if (!ambitosHoras[ambitoNombre]) {
                 ambitosHoras[ambitoNombre] = 0;
             }
@@ -147,7 +146,7 @@ export default function PaginaMisActividades() {
                                             <span className="inline-block w-1/3 md:hidden font-bold mr-4">Descripcion:</span>{item.description}
                                         </td>
                                         <td className="p-1 md:border md:border-gray-500 block md:table-cell">
-                                            <span className="inline-block w-1/3 md:hidden font-bold mr-4">Ámbitos:</span>{item.activityScopes.map(s => EtiquetasÁmbitosActividad[s.scope] || s.scope).join(", ")}
+                                            <span className="inline-block w-1/3 md:hidden font-bold mr-4">Ámbitos:</span>{item.activityScopes.map(s => EtiquetasAmbitosActividad[s.scope] || s.scope).join(", ")}
                                         </td>
                                         <td className="p-1 md:border md:border-gray-500 block md:table-cell">
                                             <span className="inline-block w-1/3 md:hidden font-bold mr-4">Fecha Inicio:</span>{formatDate(item.startDate)}
@@ -156,7 +155,7 @@ export default function PaginaMisActividades() {
                                             <span className="inline-block w-1/3 md:hidden font-bold mr-4">Fecha final:</span>{formatDate(item.endDate)}
                                         </td>
                                         <td className="p-1 md:border md:border-gray-500 block md:table-cell">
-                                            <span className="inline-block w-1/3 md:hidden font-bold mr-4">Estado:</span>{EtiquetasEstadoActividad[item.activityStatus] || item.activityStatus}
+                                            <span className="inline-block w-1/3 md:hidden font-bold mr-4">Estado:</span>{estadoActividadMap[item.activityStatus] || item.activityStatus}
                                         </td>
                                     </tr>
                                 ))}

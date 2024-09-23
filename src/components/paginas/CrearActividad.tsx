@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { ActividadCrear, crearActividad } from '../../api/servicios/actividadPost';
 import { Carrera, obtenerEstudiantesPorCarreras, obtenerProfesorPorCarreras, obtenerTodasLasCarreras, UserCarrera } from '../../api/servicios/carreras';
-import { EtiquetasÁmbitosActividad } from '../../api/servicios/enums';
+import { EtiquetasAmbitosActividad } from '../../api/servicios/enums';
 // import { useLocation, useNavigate } from 'react-router-dom';
 import { organizations, obtenerLasOrganizaciones } from '../../api/servicios/organizaciones';
 import { FiLoader } from 'react-icons/fi';
@@ -282,9 +282,8 @@ const CrearActividad = () => {
     };
     setIsLoading(true);
     try {
-      const result = await crearActividad(actividad);
-      console.log('Activity created:', result);
-
+       await crearActividad(actividad);
+ 
       // Reset form data after successful creation
       setFormData({
         name: '',
@@ -498,7 +497,7 @@ const CrearActividad = () => {
                   onChange={(e) => handleScopeChange(index, e)}
                   className="border border-gray-300 rounded-lg py-2 px-3 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
-                  {Object.entries(EtiquetasÁmbitosActividad).map(([key, value]) => (
+                  {Object.entries(EtiquetasAmbitosActividad).map(([key, value]) => (
                     <option key={key} value={key}>
                       {value}
                     </option>

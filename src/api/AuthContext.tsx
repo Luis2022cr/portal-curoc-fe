@@ -1,62 +1,81 @@
 // api/AuthContext.tsx
-import { createContext, useState, ReactNode, useEffect } from 'react';
+import { createContext, useState, ReactNode, useEffect } from "react";
+import { ObtenerDatosUsuarioIniciado, Role, User } from "./servicios/usuarios";
 
 export interface AuthContextType {
   accessToken: string | null;
-  userRole: number | null;
-  email: string | null;
+  userRole?: number | null | Role;
+  email?: string | null;
   login: (token: string, role: number, email: string) => void;
   logout: () => void;
+  loading: boolean;
+  user?: User;
 }
 
-export const AuthContext = createContext<AuthContextType | undefined>(undefined);
+export const AuthContext = createContext<AuthContextType | undefined>(
+  undefined
+);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [accessToken, setAccessToken] = useState<string | null>(sessionStorage.getItem('accessToken'));
-  const [userRole, setUserRole] = useState<number | null>(() => {
-    const role = sessionStorage.getItem('userRole');
-    return role ? Number(role) : null;
-  });
-  const [email, setEmail] = useState<string | null>(sessionStorage.getItem('email'));
+  const [accessToken, setAccessToken] = useState<string | null>(
+    localStorage.getItem("accessToken")
+  );
+
+  const [email, setEmail] = useState<string | null>();
+  const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState<User | undefined>();
 
   useEffect(() => {
     if (accessToken) {
-      sessionStorage.setItem('accessToken', accessToken);
+      setLoading(true);
+      ObtenerDatosUsuarioIniciado()
+        .then((user) => {
+          if (user) {
+            setUser(user);
+            setEmail(user.email);
+          }
+        })
+        .catch(() => {
+          logout();
+        })
+        .finally(() => setLoading(false));
     } else {
-      sessionStorage.removeItem('accessToken');
+      setLoading(false);
+      localStorage.removeItem("accessToken");
     }
   }, [accessToken]);
 
   useEffect(() => {
-    if (userRole !== null) {
-      sessionStorage.setItem('userRole', userRole.toString());
+    if (accessToken) {
+      localStorage.setItem("accessToken", accessToken);
     } else {
-      sessionStorage.removeItem('userRole');
+      localStorage.removeItem("accessToken");
     }
-  }, [userRole]);
+  }, [accessToken]);
 
-  useEffect(() => {
-    if (email) {
-      sessionStorage.setItem('email', email);
-    } else {
-      sessionStorage.removeItem('email');
-    }
-  }, [email]);
-
-  const login = (token: string, role: number, email: string) => {
+  const login = (token: string, _: number, email: string) => {
     setAccessToken(token);
-    setUserRole(role);
     setEmail(email);
+    localStorage.setItem("accessToken", token);
   };
 
   const logout = () => {
     setAccessToken(null);
-    setUserRole(null);
     setEmail(null);
   };
 
   return (
-    <AuthContext.Provider value={{ accessToken, userRole, email, login, logout }}>
+    <AuthContext.Provider
+      value={{
+        accessToken,
+        userRole: user?.role,
+        email,
+        login,
+        logout,
+        loading,
+        user,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );

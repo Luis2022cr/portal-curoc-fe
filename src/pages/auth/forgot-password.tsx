@@ -5,6 +5,7 @@ import { MdOutlineAlternateEmail } from 'react-icons/md';
 import { FiLoader } from 'react-icons/fi';
 import axios from 'axios';
 import axiosInstance from '@/api/axiosInstance';
+import { useNavigate } from 'react-router-dom';
 
 const verificarEmailUnah = /^[a-zA-Z0-9._%+-]+@unah\.(edu\.)?hn$/;
 
@@ -61,6 +62,8 @@ const ForgotPassword: React.FC = () => {
         }
     };
 
+    const navigate =useNavigate();
+
     return (
         <>
             <div className="flex items-center justify-center h-full my-11 md:my-32">
@@ -97,8 +100,13 @@ const ForgotPassword: React.FC = () => {
                                 {isLoading ? (<FiLoader className="mr-2 animate-spin" />) : ('Recuperar Contraseña')}
                             </button>
                         </form>
-                        <div className="flex flex-col items-center space-y-2 mt-5">
-                            <a href="/login" className="text-sm text-blue-900 hover:underline">¿Ya tienes una cuenta? Iniciar Sesión</a>
+                        <div className="flex flex-col items-center space-y-2 mt-5"
+                        >
+                            <span
+                            onClick={() => {
+                              navigate("/login");
+                            }}
+                           className="text-sm text-blue-900 hover:underline">¿Ya tienes una cuenta? Iniciar Sesión</span>
                         </div>
                     </div>
                 </div>
