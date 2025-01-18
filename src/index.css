@@ -115,3 +115,23 @@
 .sound-wave div:nth-child(5) {
   animation-delay: 0.8s;
 }
+
+
+/* Placeholder de ProFormSelect */
+
+:root {
+  --placeholder-color: rgba(0, 0, 0, 0.8);
+}
+.ant-select-selection-placeholder {
+  color: var(--placeholder-color) !important;
+}
+.ant-picker-input input::placeholder {
+  color: var(--placeholder-color) !important;
+}
+.ant-input::placeholder,
+.ant-input-textarea::placeholder {
+  color: var(--placeholder-color) !important;
+}
+.ant-input-number-input::placeholder {
+  color: var(--placeholder-color) !important;
+}
